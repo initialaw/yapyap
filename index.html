@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YAPYAP!</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 20px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 40px;
+        padding: 8px;
+        font-size: 14px;
+        resize: none;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        box-sizing: border-box;
+      }
+
+      .send-button-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+
+      button {
+        padding: 10px 18px;
+        background: #1da1f2;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .msg-box {
+        background: #f0f2f5;
+        padding: 10px;
+        border-radius: 15px;
+        margin-bottom: 10px;
+      }
+
+      .timestamp {
+        font-size: 11px;
+        color: gray;
+        margin-top: 5px;
+      }
+
+      .replies {
+        margin-top: 10px;
+        margin-left: 5px;
+        border-left: 2px solid #ccc;
+        padding-left: 10px;
+      }
+
+      .reply-input {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .reply-input input {
+        flex: 1;
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      .reply-input button {
+        flex-shrink: 0;
+      }
+
+      .admin-delete {
+        background: red;
+        color: white;
+        margin-left: 10px;
+        border: none;
+        padding: 3px 6px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      hr {
+        border: 0;
+        border-top: 1px solid #ccc;
+        margin: 10px 0;
+      }
+
+      @media (max-width: 500px) {
+        .container {
+          padding: 15px;
+        }
+
+        button {
+          font-size: 13px;
+          padding: 8px 14px;
+        }
+
+        .reply-input {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 5px;
+        }
+
+        .reply-input input {
+          width: 100%;
+        }
+
+        .reply-input button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Kirim pesan kamu kepada dunia.</h1>
+      <textarea
+        id="messageInput"
+        placeholder="Tulis pesan kamu di sini."
+      ></textarea>
+      <div class="send-button-container">
+        <button onclick="sendMessage()">Kirim</button>
+      </div>
+      <div id="messages"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+      //Dibuat oleh Initial A dengan bantuan teknologi canggih.
+      const firebaseConfig = {
+        apiKey: "AIzaSyAKWUpgQhdOvQeRzfVfKg7WqpkhrWsGhQ8",
+        authDomain: "chatroom-dcc9a.firebaseapp.com",
+        databaseURL:
+          "https://chatroom-dcc9a-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "chatroom-dcc9a",
+        storageBucket: "chatroom-dcc9a.appspot.com",
+        messagingSenderId: "1045524828663",
+        appId: "1:1045524828663:web:a7744bbed86575d30b9ef2",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+      let isAdmin = false;
+
+      function formatTimestamp(ts) {
+        const date = new Date(ts);
+        const days = [
+          "Minggu",
+          "Senin",
+          "Selasa",
+          "Rabu",
+          "Kamis",
+          "Jumat",
+          "Sabtu",
+        ];
+        const months = [
+          "Januari",
+          "Februari",
+          "Maret",
+          "April",
+          "Mei",
+          "Juni",
+          "Juli",
+          "Agustus",
+          "September",
+          "Oktober",
+          "November",
+          "Desember",
+        ];
+
+        const dayName = days[date.getDay()];
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        return `${dayName}, ${day} ${month} ${year} - ${hours}.${minutes}.${seconds}`;
+      }
+
+      function sendMessage() {
+        const message = document.getElementById("messageInput").value.trim();
+        if (message === "") return;
+
+        if (message.toLowerCase() === "superuser") {
+          const pass = prompt("Masukkan:");
+          if (pass === "aldiw0") {
+            isAdmin = true;
+            alert("Mode aktif.");
+            loadMessages();
+          } else {
+            alert("Salah!");
+          }
+          document.getElementById("messageInput").value = "";
+          return;
+        }
+
+        const newMsg = {
+          text: message,
+          timestamp: Date.now(),
+          replies: [],
+        };
+
+        db.ref("messages").push(newMsg);
+        document.getElementById("messageInput").value = "";
+      }
+
+      function sendReply(msgId, inputId) {
+        const replyText = document.getElementById(inputId).value.trim();
+        if (replyText === "") return;
+
+        const reply = {
+          text: replyText,
+          timestamp: Date.now(),
+        };
+
+        db.ref(`messages/${msgId}/replies`).push(reply);
+        document.getElementById(inputId).value = "";
+      }
+
+      function deleteMessage(id) {
+        if (confirm("Hapus?")) {
+          db.ref("messages/" + id).remove();
+        }
+      }
+
+      function deleteReply(msgId, replyId) {
+        if (confirm("Hapus?")) {
+          db.ref(`messages/${msgId}/replies/${replyId}`).remove();
+        }
+      }
+
+      function loadMessages() {
+        db.ref("messages")
+          .orderByChild("timestamp")
+          .on("value", (snapshot) => {
+            const messages = snapshot.val();
+            const container = document.getElementById("messages");
+            container.innerHTML = "";
+
+            if (messages) {
+              const sorted = Object.entries(messages).sort(
+                (a, b) => b[1].timestamp - a[1].timestamp
+              );
+
+              sorted.forEach(([id, msg]) => {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = "msg-box";
+
+                const time = formatTimestamp(msg.timestamp);
+                let deleteBtn = isAdmin
+                  ? `<button class="admin-delete" onclick="deleteMessage('${id}')">x</button>`
+                  : "";
+
+                msgDiv.innerHTML = `
+                <div>${msg.text} ${deleteBtn}</div>
+                <div class="timestamp">Dikirim pada ${time}</div>
+                <div class="replies" id="replies-${id}"></div>
+                <div class="reply-input">
+                  <input type="text" id="reply-${id}" placeholder="Balas pesan.">
+                  <button onclick="sendReply('${id}', 'reply-${id}')">Balas</button>
+                </div>
+                <hr>
+              `;
+
+                container.appendChild(msgDiv);
+
+                if (msg.replies) {
+                  const repliesContainer = document.getElementById(
+                    `replies-${id}`
+                  );
+                  Object.entries(msg.replies)
+                    .sort((a, b) => a[1].timestamp - b[1].timestamp)
+                    .forEach(([replyId, reply]) => {
+                      const replyTime = formatTimestamp(reply.timestamp);
+                      const replyEl = document.createElement("div");
+                      replyEl.className = "msg-box";
+                      replyEl.style.background = "#e8f0fe";
+
+                      const deleteReplyBtn = isAdmin
+                        ? `<button class="admin-delete" onclick="deleteReply('${id}', '${replyId}')">x</button>`
+                        : "";
+
+                      replyEl.innerHTML = `
+                      <div>${reply.text} ${deleteReplyBtn}</div>
+                      <div class="timestamp">Dibalas pada ${replyTime}</div>
+                    `;
+
+                      repliesContainer.appendChild(replyEl);
+                    });
+                }
+              });
+            }
+          });
+      }
+
+      loadMessages();
+      //xaxwxhxoxlxixcxexrxsx
+    </script>
+  </body>
+</html>
