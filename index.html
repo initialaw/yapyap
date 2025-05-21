@@ -1,343 +1,355 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NGOBROL!</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap"
-      rel="stylesheet"
-    />
-
+    <title>YAPYAP!</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f8;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 20px;
+      * {
+        box-sizing: border-box;
       }
 
-      .container {
-        background: white;
-        width: 100%;
-        max-width: 600px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffe4e1;
+        color: #14171a;
+      }
+
+      #header {
+        text-align: center;
+        background-color: #ffe4e1;
+        padding: 15px 10px 5px 10px;
       }
 
       h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 26px;
-        font-family: "Fredoka", cursive;
-        color: #0011ff;
-        text-shadow: 1px 2px 3px rgb(255, 0, 0);
+        margin: 0;
+        font-size: 25px;
+        text-shadow: 3px 2px 1px #00bfff;
+        color: #ee82ee;
       }
 
-      textarea {
-        width: 100%;
-        height: 40px;
-        padding: 8px;
-        font-size: 14px;
-        resize: none;
-        border-radius: 10px;
-        margin-bottom: 5px;
-        box-sizing: border-box;
-      }
-
-      .send-button-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 15px;
-      }
-
-      button {
-        padding: 10px 18px;
-        background: #1da1f2;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-
-      .msg-box {
-        background: #f0f2f5;
+      #messages {
+        position: fixed;
+        top: 55px;
+        bottom: 140px;
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
         padding: 10px;
-        border-radius: 15px;
-        margin-bottom: 10px;
+        overflow-y: auto;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
       }
 
-      .timestamp {
-        font-size: 11px;
-        color: gray;
-        margin-top: 5px;
+      .message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 10px;
+        clear: both;
+        word-wrap: break-word;
+        position: relative;
       }
 
-      .replies {
-        margin-top: 10px;
-        margin-left: 5px;
-        border-left: 2px solid #ccc;
-        padding-left: 10px;
+      .me {
+        background-color: #ee82ee;
+        text-align: right;
+        margin-left: auto;
       }
 
-      .reply-input {
-        margin-top: 10px;
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
+      .other {
+        background-color: #00bfff;
+        text-align: left;
+        margin-right: auto;
       }
 
-      .reply-input input {
-        flex: 1;
-        padding: 8px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-      }
-
-      .reply-input button {
-        flex-shrink: 0;
-      }
-
-      .admin-delete {
-        background: red;
-        color: white;
-        margin-left: 10px;
-        border: none;
-        padding: 3px 6px;
-        border-radius: 3px;
-        cursor: pointer;
+      .message div:first-child {
+        font-weight: bold;
         font-size: 12px;
+        margin-bottom: 5px;
+        color: #000;
       }
 
-      hr {
-        border: 0;
-        border-top: 1px solid #bbb;
-        margin: 15px 0;
+      .message div:last-child {
+        font-size: 14px;
       }
 
-      @media (max-width: 500px) {
-        .container {
-          padding: 15px;
-        }
+      .msgMeta {
+        font-size: 12px;
+        color: #333;
+        margin-top: 5px;
+        opacity: 0.8;
+      }
 
-        button {
-          font-size: 13px;
-          padding: 8px 14px;
-        }
+      .me .msgMeta {
+        text-align: right;
+      }
 
-        .reply-input {
+      .other .msgMeta {
+        text-align: left;
+      }
+
+      .message button {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background-color: rgb(0, 0, 0);
+        color: #ff0000;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 10px;
+        padding: 2px 5px;
+      }
+
+      .message button:hover {
+        text-decoration: underline;
+      }
+
+      #inputBar {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #ffe4e1;
+        padding: 10px;
+        box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .input-wrapper {
+        position: relative;
+        flex: 1 1 40%;
+        min-width: 200px;
+      }
+
+      .input-wrapper input {
+        width: 100%;
+        padding: 18px 60px 18px 16px;
+        border: 1px solid #fff;
+        border-radius: 12px;
+        font-size: 18px;
+      }
+
+      .input-wrapper button {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        background-color: #002f76;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 10px 14px;
+        cursor: pointer;
+      }
+
+      .input-wrapper button:hover {
+        background-color: #1774ff;
+      }
+
+      @media (max-width: 600px) {
+        #inputBar {
           flex-direction: column;
           align-items: stretch;
-          gap: 5px;
         }
 
-        .reply-input input {
-          width: 100%;
-        }
-
-        .reply-input button {
-          width: 100%;
+        .input-wrapper {
+          flex: 1 1 100%;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>NGOBROL!</h1>
-      <textarea
-        id="messageInput"
-        placeholder="Tulis pesan kamu di sini."
-      ></textarea>
-      <div class="send-button-container">
-        <button onclick="sendMessage()">Kirim</button>
+    <div id="header">
+      <h1>HAPPY YAPPING!</h1>
+    </div>
+
+    <div id="messages"></div>
+
+    <div id="inputBar">
+      <div class="input-wrapper">
+        <input type="text" id="username" placeholder="USERNAME:" />
+        <button onclick="setUsername()">SET!</button>
       </div>
-      <div id="messages"></div>
+      <div class="input-wrapper">
+        <input type="text" id="messageInput" placeholder="PESAN:" />
+        <button onclick="sendMessage()">YAP!</button>
+      </div>
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <script>
       //Dibuat oleh Initial A dengan bantuan teknologi canggih.
+
       const firebaseConfig = {
-        apiKey: "AIzaSyAKWUpgQhdOvQeRzfVfKg7WqpkhrWsGhQ8",
-        authDomain: "chatroom-dcc9a.firebaseapp.com",
-        databaseURL:
-          "https://chatroom-dcc9a-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "chatroom-dcc9a",
-        storageBucket: "chatroom-dcc9a.appspot.com",
-        messagingSenderId: "1045524828663",
-        appId: "1:1045524828663:web:a7744bbed86575d30b9ef2",
+        apiKey: "AIzaSyBE4TvGyh3Xu7RoWScanrZSV_QBxlXYBN4",
+        authDomain: "chatarah-e15f3.firebaseapp.com",
+        databaseURL: "https://chatarah-e15f3-default-rtdb.firebaseio.com",
+        projectId: "chatarah-e15f3",
+        storageBucket: "chatarah-e15f3.appspot.com",
+        messagingSenderId: "611477719657",
+        appId: "1:611477719657:web:58103ecce9fc4e33cb70f8",
       };
 
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
-      let isAdmin = false;
+      const messagesRef = db.ref("messages");
 
-      function formatTimestamp(ts) {
-        const date = new Date(ts);
-        const days = [
-          "Minggu",
-          "Senin",
-          "Selasa",
-          "Rabu",
-          "Kamis",
-          "Jumat",
-          "Sabtu",
-        ];
-        const months = [
-          "Januari",
-          "Februari",
-          "Maret",
-          "April",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agustus",
-          "September",
-          "Oktober",
-          "November",
-          "Desember",
-        ];
+      function setUsername() {
+        const input = document.getElementById("username");
+        const rawName = input.value.trim();
+        const nameKey = rawName.toLowerCase();
 
-        const dayName = days[date.getDay()];
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
+        if (!rawName) return;
 
-        return `${dayName}, ${day} ${month} ${year} - ${hours}.${minutes}.${seconds}`;
+        const usernamesRef = db.ref("usernames/" + nameKey);
+
+        usernamesRef.once("value", function (snapshot) {
+          if (snapshot.exists()) {
+            alert("Username sudah digunakan, pakai yang lain.");
+          } else {
+            localStorage.setItem("chatUsername", rawName);
+            input.value = rawName;
+            input.disabled = true;
+            usernamesRef.set(true);
+            alert("Username berhasil disimpan!");
+          }
+        });
+      }
+
+      function loadUsername() {
+        const savedName = localStorage.getItem("chatUsername");
+        const input = document.getElementById("username");
+        if (savedName) {
+          input.value = savedName;
+          input.disabled = true;
+        }
+      }
+
+      function generateID() {
+        return "msg" + Math.random().toString(36).substr(2, 9);
       }
 
       function sendMessage() {
-        const message = document.getElementById("messageInput").value.trim();
-        if (message === "") return;
+        const username = localStorage.getItem("chatUsername");
+        const input = document.getElementById("messageInput");
+        const message = input.value.trim();
+        input.focus();
 
-        if (message.toLowerCase() === "superuser") {
-          const pass = prompt("Masukkan:");
-          if (pass === "aldiw0") {
-            isAdmin = true;
-            alert("Mode aktif.");
-            loadMessages();
-          } else {
-            alert("Salah!");
-          }
-          document.getElementById("messageInput").value = "";
+        if (!username) {
+          alert("Setel username terlebih dahulu!");
           return;
         }
 
-        const newMsg = {
+        if (!message) return;
+
+        if (message.toLowerCase() === "resetusername") {
+          const oldName = localStorage.getItem("chatUsername");
+          if (oldName) {
+            const nameKey = oldName.toLowerCase();
+            db.ref("usernames/" + nameKey).remove();
+          }
+
+          localStorage.removeItem("chatUsername");
+          document.getElementById("username").disabled = false;
+          document.getElementById("username").value = "";
+          alert("Username berhasil direset. Silakan buat nama baru.");
+          input.value = "";
+          return;
+        }
+
+        messagesRef.push({
+          id: generateID(),
+          name: username,
           text: message,
           timestamp: Date.now(),
-          replies: [],
-        };
+        });
 
-        db.ref("messages").push(newMsg);
-        document.getElementById("messageInput").value = "";
+        input.value = "";
       }
 
-      function sendReply(msgId, inputId) {
-        const replyText = document.getElementById(inputId).value.trim();
-        if (replyText === "") return;
+      messagesRef
+        .orderByChild("timestamp")
+        .on("child_added", function (snapshot) {
+          const msg = snapshot.val();
+          const msgElem = document.createElement("div");
+          msgElem.classList.add("message");
 
-        const reply = {
-          text: replyText,
-          timestamp: Date.now(),
-        };
+          const currentUser = document.getElementById("username").value;
+          msgElem.classList.add(msg.name === currentUser ? "me" : "other");
 
-        db.ref(`messages/${msgId}/replies`).push(reply);
-        document.getElementById(inputId).value = "";
-      }
+          const time = formatWaktuIndonesia(msg.timestamp);
+          msgElem.setAttribute("id", msg.id);
 
-      function deleteMessage(id) {
-        if (confirm("Hapus?")) {
-          db.ref("messages/" + id).remove();
-        }
-      }
+          msgElem.innerHTML = `
+          <strong>${msg.name}</strong>
+          <div>${msg.text}</div>
+          <div class="msgMeta">${time}</div>
+        `;
 
-      function deleteReply(msgId, replyId) {
-        if (confirm("Hapus?")) {
-          db.ref(`messages/${msgId}/replies/${replyId}`).remove();
-        }
-      }
+          if (currentUser.toLowerCase() === "admin123") {
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "X";
+            delBtn.onclick = function () {
+              if (confirm("Yakin?")) {
+                deleteMessageById(msg.id);
+              }
+            };
+            msgElem.appendChild(delBtn);
+          }
 
-      function loadMessages() {
-        db.ref("messages")
-          .orderByChild("timestamp")
-          .on("value", (snapshot) => {
-            const messages = snapshot.val();
-            const container = document.getElementById("messages");
-            container.innerHTML = "";
+          const messagesContainer = document.getElementById("messages");
+          messagesContainer.appendChild(msgElem);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
 
-            if (messages) {
-              const sorted = Object.entries(messages).sort(
-                (a, b) => b[1].timestamp - a[1].timestamp
-              );
-
-              sorted.forEach(([id, msg]) => {
-                const msgDiv = document.createElement("div");
-                msgDiv.className = "msg-box";
-
-                const time = formatTimestamp(msg.timestamp);
-                let deleteBtn = isAdmin
-                  ? `<button class="admin-delete" onclick="deleteMessage('${id}')">x</button>`
-                  : "";
-
-                msgDiv.innerHTML = `
-  <div>${msg.text} ${deleteBtn}</div>
-  <div class="timestamp">Dikirim pada ${time}</div>
-  <div class="replies" id="replies-${id}"></div>
-  <div class="reply-input">
-    <input type="text" id="reply-${id}" placeholder="Balas pesan.">
-    <button onclick="sendReply('${id}', 'reply-${id}')">Balas</button>
-  </div>
-`;
-
-                container.appendChild(msgDiv);
-                const hr = document.createElement("hr");
-                container.appendChild(hr);
-
-                if (msg.replies) {
-                  const repliesContainer = document.getElementById(
-                    `replies-${id}`
-                  );
-                  Object.entries(msg.replies)
-                    .sort((a, b) => a[1].timestamp - b[1].timestamp)
-                    .forEach(([replyId, reply]) => {
-                      const replyTime = formatTimestamp(reply.timestamp);
-                      const replyEl = document.createElement("div");
-                      replyEl.className = "msg-box";
-                      replyEl.style.background = "#e8f0fe";
-
-                      const deleteReplyBtn = isAdmin
-                        ? `<button class="admin-delete" onclick="deleteReply('${id}', '${replyId}')">x</button>`
-                        : "";
-
-                      replyEl.innerHTML = `
-                      <div>${reply.text} ${deleteReplyBtn}</div>
-                      <div class="timestamp">Dibalas pada ${replyTime}</div>
-                    `;
-
-                      repliesContainer.appendChild(replyEl);
-                    });
-                }
-              });
+      function deleteMessageById(messageId) {
+        messagesRef.once("value", function (snapshot) {
+          snapshot.forEach(function (childSnapshot) {
+            const message = childSnapshot.val();
+            if (message.id === messageId) {
+              childSnapshot.ref.remove();
+              const elem = document.getElementById(messageId);
+              if (elem) elem.remove();
             }
           });
+        });
       }
 
-      loadMessages();
+      function formatWaktuIndonesia(timestamp) {
+        const date = new Date(timestamp);
+        const optionsTanggal = {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        };
+        const optionsWaktu = {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        };
+
+        let tanggal = date.toLocaleDateString("id-ID", optionsTanggal);
+        const waktu = date.toLocaleTimeString("id-ID", optionsWaktu);
+        tanggal = tanggal
+          .split(" ")
+          .map((kata) => kata.charAt(0).toUpperCase() + kata.slice(1))
+          .join(" ");
+        return `${tanggal} - ${waktu}`;
+      }
+
       //xaxwxhxoxlxixcxexrxsx
+
+      window.onload = loadUsername;
     </script>
   </body>
 </html>
