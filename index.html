@@ -5,162 +5,163 @@
   <head>
     <title>YAPYAP!</title>
     <style>
-            * {
-              box-sizing: border-box;
-            }
-
-            body {
-              font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-              margin: 0;
-              padding: 0;
-              background-color: #ffe4e1;
-              color: #14171a;
-            }
-
-            #header {
-              text-align: center;
-              background-color: #ffe4e1;
-              padding: 15px 10px 5px 10px;
-            }
-
-            h1 {
-              margin: 0;
-              font-size: 25px;
-              text-shadow: 3px 2px 1px #00bfff;
-              color: #ee82ee;
-            }
-
-            #messages {
-              position: fixed;
-              top: 55px;
-              bottom: 140px;
-              left: 0;
-              right: 0;
-              background-color: #ffffff;
-              padding: 10px;
-              overflow-y: auto;
-              border-top: 1px solid #ccc;
-              border-bottom: 1px solid #ccc;
-            }
-
-            .message {
-              margin: 10px 0;
-              padding: 10px;
-              border-radius: 10px;
-              clear: both;
-              word-wrap: break-word;
-              position: relative;
-            }
-
-            .me {
-              background-color: #ee82ee;
-              text-align: right;
-              margin-left: auto;
-            }
-
-            .other {
-              background-color: #00bfff;
-              text-align: left;
-              margin-right: auto;
-            }
-
-            .message div:first-child {
-              font-weight: bold;
-              font-size: 12px;
-              margin-bottom: 5px;
-              color: #000;
-            }
-
-            .message div:last-child {
-              font-size: 14px;
-            }
-
-            .msgMeta {
-              font-size: 12px;
-              color: #333;
-              margin-top: 5px;
-              opacity: 0.8;
-            }
-
-            .me .msgMeta {
-              text-align: right;
-            }
-
-            .other .msgMeta {
-              text-align: left;
-            }
-
-            .message button {
-              position: absolute;
-              bottom: 5px;
-              right: 5px;
-              background-color: rgb(0, 0, 0);
-              color: #ff0000;
-              border-radius: 7px;
-              cursor: pointer;
-              font-size: 10px;
-              padding: 2px 5px;
-            }
-
-            .message button:hover {
-              text-decoration: underline;
-            }
-
-            #inputBar {
-              position: fixed;
-              bottom: 0;
-              width: 100%;
-              z-index: 1000;
-              background-color: #ffe4e1;
-              padding: 10px;
-              box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.1);
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-              justify-content: center;
-            }
-
-            .input-wrapper {
-              position: relative;
-              flex: 1 1 40%;
-              min-width: 200px;
-            }
-
-            .input-wrapper input {
-              width: 100%;
-              padding: 18px 60px 18px 16px;
-              border: 1px solid #fff;
-              border-radius: 12px;
-              font-size: 18px;
-            }
-
-            .input-wrapper button {
-              position: absolute;
-              top: 50%;
-              right: 10px;
-              transform: translateY(-50%);
-              background-color: #002f76;
-              border: none;
-              border-radius: 8px;
-              color: white;
-              font-weight: bold;
-              font-size: 16px;
-              padding: 10px 14px;
-              cursor: pointer;
-            }
-
-            .input-wrapper button:hover {
-              background-color: #1774ff;
-            }
-
-            @media (max-width: 768px) {
-        .desktop-only { display: none; }
+      * {
+        box-sizing: border-box;
       }
 
-              .input-wrapper {
-                flex: 1 1 100%;
-              }
-            }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #ffe4e1;
+        color: #14171a;
+      }
+
+      #header {
+        text-align: center;
+        background-color: #ffe4e1;
+        padding: 15px 10px 5px 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 25px;
+        text-shadow: 3px 2px 1px #00bfff;
+        color: #ee82ee;
+      }
+
+      #messages {
+        position: fixed;
+        top: 55px;
+        bottom: 140px;
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        padding: 10px;
+        overflow-y: auto;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 10px;
+        clear: both;
+        word-wrap: break-word;
+        position: relative;
+      }
+
+      .me {
+        background-color: #ee82ee;
+        text-align: right;
+        margin-left: auto;
+      }
+
+      .other {
+        background-color: #00bfff;
+        text-align: left;
+        margin-right: auto;
+      }
+
+      .message div:first-child {
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 5px;
+        color: #000;
+      }
+
+      .message div:last-child {
+        font-size: 14px;
+      }
+
+      .msgMeta {
+        font-size: 12px;
+        color: #333;
+        margin-top: 5px;
+        opacity: 0.8;
+      }
+
+      .me .msgMeta {
+        text-align: right;
+      }
+
+      .other .msgMeta {
+        text-align: left;
+      }
+
+      .message button {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background-color: rgb(0, 0, 0);
+        color: #ff0000;
+        border-radius: 7px;
+        cursor: pointer;
+        font-size: 10px;
+        padding: 2px 5px;
+      }
+
+      .message button:hover {
+        text-decoration: underline;
+      }
+
+      #inputBar {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: #ffe4e1;
+        padding: 10px;
+        box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .input-wrapper {
+        position: relative;
+        flex: 1 1 40%;
+        min-width: 200px;
+      }
+
+      .input-wrapper input {
+        width: 100%;
+        padding: 18px 60px 18px 16px;
+        border: 1px solid #fff;
+        border-radius: 12px;
+        font-size: 18px;
+      }
+
+      .input-wrapper button {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        background-color: #002f76;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 10px 14px;
+        cursor: pointer;
+      }
+
+      .input-wrapper button:hover {
+        background-color: #1774ff;
+      }
+
+      @media (max-width: 768px) {
+        .desktop-only {
+          display: none;
+        }
+      }
+
+      .input-wrapper {
+        flex: 1 1 100%;
+      }
     </style>
   </head>
   <body>
@@ -251,16 +252,18 @@
         if (!message) return;
 
         if (message.toLowerCase() === "resetusername") {
-          const oldName = localStorage.getItem("chatUsername");
-          if (oldName) {
-            const nameKey = oldName.toLowerCase();
-            db.ref("usernames/" + nameKey).remove();
-          }
+          db.ref("usernames")
+            .remove()
+            .then(() => {
+              localStorage.removeItem("chatUsername");
+              document.getElementById("username").disabled = false;
+              document.getElementById("username").value = "";
+              alert("Semua username telah dihapus. Silakan buat nama baru.");
+            })
+            .catch((error) => {
+              alert("Gagal menghapus username: " + error.message);
+            });
 
-          localStorage.removeItem("chatUsername");
-          document.getElementById("username").disabled = false;
-          document.getElementById("username").value = "";
-          alert("Username berhasil direset. Silakan buat nama baru.");
           input.value = "";
           return;
         }
