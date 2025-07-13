@@ -162,6 +162,15 @@
       .input-wrapper {
         flex: 1 1 100%;
       }
+
+      .message.blur-content div,
+.message.blur-content strong {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+}
+
+
     </style>
   </head>
   <body>
@@ -203,27 +212,40 @@
       const db = firebase.database();
       const messagesRef = db.ref("messages");
 
-      function setUsername() {
-        const input = document.getElementById("username");
-        const rawName = input.value.trim();
-        const nameKey = rawName.toLowerCase();
+     function setUsername() {
+  const input = document.getElementById("username");
+  const rawName = input.value.trim();
+  const nameKey = rawName.toLowerCase();
 
-        if (!rawName) return;
+  if (!rawName) return;
 
-        const usernamesRef = db.ref("usernames/" + nameKey);
+  // GLOBAL #BLUR COMMAND
+  if (rawName === "#blur") {
+    firebase.database().ref("settings/blur").set(true);
+    return;
+  }
 
-        usernamesRef.once("value", function (snapshot) {
-          if (snapshot.exists()) {
-            alert("Username sudah digunakan, pakai yang lain.");
-          } else {
-            localStorage.setItem("chatUsername", rawName);
-            input.value = rawName;
-            input.disabled = true;
-            usernamesRef.set(true);
-            alert("Username berhasil disimpan!");
-          }
-        });
-      }
+  if (rawName === "#unblur") {
+    firebase.database().ref("settings/blur").set(false);
+    return;
+  }
+
+  const usernamesRef = db.ref("usernames/" + nameKey);
+
+  usernamesRef.once("value", function (snapshot) {
+    if (snapshot.exists()) {
+      alert("Username sudah digunakan, pakai yang lain.");
+    } else {
+      localStorage.setItem("chatUsername", rawName);
+      input.value = rawName;
+      input.disabled = true;
+      usernamesRef.set(true);
+      alert("Username berhasil disimpan!");
+    }
+  });
+}
+
+
 
       function loadUsername() {
         const savedName = localStorage.getItem("chatUsername");
@@ -309,7 +331,18 @@
           }
 
           const messagesContainer = document.getElementById("messages");
+          if (snapshot.exists()) {
+  firebase.database().ref("settings/blur").once("value", function (snap) {
+    const blurActive = snap.val();
+    if (blurActive) {
+      msgElem.classList.add("blur-content");
+    }
+  });
+}
+
           messagesContainer.appendChild(msgElem);
+
+
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
 
@@ -349,6 +382,19 @@
           .join(" ");
         return `${tanggal} - ${waktu}`;
       }
+
+      firebase.database().ref("settings/blur").on("value", function(snapshot) {
+  const blurActive = snapshot.val();
+
+  document.querySelectorAll(".message").forEach((msg) => {
+    if (blurActive) {
+      msg.classList.add("blur-content");
+    } else {
+      msg.classList.remove("blur-content");
+    }
+  });
+});
+
 
       //xaxwxhxoxlxixcxexrxsx
 
