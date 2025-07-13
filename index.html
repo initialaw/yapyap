@@ -163,12 +163,13 @@
         flex: 1 1 100%;
       }
 
-      .message.blur-content div,
-.message.blur-content strong {
-  filter: blur(4px);
+      .message.blur-content {
+  filter: blur(5px);
+  -webkit-filter: blur(5px); /* Android WebKit support */
   pointer-events: none;
   user-select: none;
 }
+
 
 
     </style>
